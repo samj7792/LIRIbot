@@ -18,13 +18,53 @@ switch (process.argv[2]) {
 
         break;
     
+    case "spotify-this-song":
+
+        spotify();
+
+        break;
+    
     
 }
 
 
 
+// spotify-this-song function
+function spotify() {
+
+    var Spotify = require('node-spotify-api');
+ 
+    var spotify = new Spotify(keys.spotify);
+
+    var songName = "";
+
+    for ( var i = 3; i < process.argv.length ; i++) {
+        songName += process.argv[i] + " ";
+    }
+    
+    spotify
+    .search({ type: 'track', query: songName })
+    .then(function(response) {
+
+        // JSON response
+        // console.log(JSON.stringify(response, null, 2));
+
+        console.log("Artist(s): " + response.tracks.items[0].album.artists[0].name);
+        console.log("Song Name: " + response.tracks.items[0].name);
+        console.log("Link to Song: " + response.tracks.items[0].external_urls.spotify);
+        console.log("Album: " + response.tracks.items[0].album.name);
+
+    })
+    .catch(function(err) {
+        console.log(err);
+    });
+
+}
 
 
+
+
+// function for movie-this
 function omdb() {
 
     // Include the axios npm package
