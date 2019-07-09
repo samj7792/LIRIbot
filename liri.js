@@ -24,7 +24,28 @@ switch (process.argv[2]) {
 
         break;
     
+    case "concert-this": 
+
+        concert();
+
+        break;
+
     
+}
+
+
+
+// concert-this function
+function concert() {
+
+    var bandsintown = require('bandsintown')("codingbootcamp");
+ 
+bandsintown
+  .getArtistEventList('Skrillex')
+  .then(function(events) {
+    // return array of events
+    console.log(events);
+  });
 }
 
 
