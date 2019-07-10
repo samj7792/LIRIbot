@@ -2,7 +2,7 @@ require("dotenv").config();
 
 var keys = require("./keys.js");
 
-
+var moment = require("moment");
 
 
 console.log(process.argv);
@@ -30,7 +30,32 @@ switch (process.argv[2]) {
 
         break;
 
-    
+    case "do-what-it-says":
+
+        doIt();
+
+        break;
+}
+
+
+
+// do-what-it-says function
+function doIt() {
+
+    var fs = require("fs");
+
+    fs.readFile("random.txt", "utf8", function(error, data) {
+
+        if (error) {
+            return console.log(error);
+        }
+
+        console.log(data);
+        
+        var dataArr = data.split(",");
+
+        console.log(dataArr);
+    });
 }
 
 
@@ -38,14 +63,59 @@ switch (process.argv[2]) {
 // concert-this function
 function concert() {
 
+    // Include the axios npm package
+    var axios = require("axios");
+
     var bandsintown = require('bandsintown')("codingbootcamp");
+
+    var artist = "";
+
+    for ( var i = 3; i < process.argv.length ; i++) {
+        artist += "%20" + process.argv[i];
+    }
+
+    var queryUrl = "https://rest.bandsintown.com/artists/" + artist + "/events?app_id=codingbootcamp";
  
-bandsintown
-  .getArtistEventList('Skrillex')
-  .then(function(events) {
-    // return array of events
-    console.log(events);
-  });
+    axios.get(queryUrl).then(
+        function(response) {
+            console.log(response);
+            
+            console.log("Data%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
+            console.log(response.data);
+
+            var data = response.data;
+
+            for (var i = 0 ; i < data.length ; i++){
+                console.log("----------Venue----------");
+                console.log(data[i].venue.name);
+                console.log("----------Location----------");
+                console.log(data[i].venue.city + ", " + data[i].venue.region + ", " + data[i].venue.country);
+                console.log("----------Date----------");
+                console.log(moment(data[i].datetime).format('MMMM Do YYYY, h:mm:ss a'));
+
+                console.log("\n\n")
+            }
+            
+        }).catch(function(error) {
+        if (error.response) {
+        // The request was made and the server responded with a status code
+        // that falls out of the range of 2xx
+        console.log("---------------Data---------------");
+        console.log(error.response.data);
+        console.log("---------------Status---------------");
+        console.log(error.response.status);
+        console.log("---------------Status---------------");
+        console.log(error.response.headers);
+        } else if (error.request) {
+        // The request was made but no response was received
+        // `error.request` is an object that comes back with details pertaining to the error that occurred.
+        console.log(error.request);
+        } else {
+        // Something happened in setting up the request that triggered an Error
+        console.log("Error", error.message);
+        }
+        console.log(error.config);
+    });
 }
 
 
