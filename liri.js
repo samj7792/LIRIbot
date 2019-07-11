@@ -4,8 +4,9 @@ var keys = require("./keys.js");
 
 var moment = require("moment");
 
+var textToLog = "";
 
-console.log(process.argv);
+// console.log(process.argv);
 
 
 switch (process.argv[2]) {
@@ -50,11 +51,11 @@ function doIt() {
             return console.log(error);
         }
 
-        console.log(data);
+        // console.log(data);
         
         var dataArr = data.split(", ");
 
-        console.log(dataArr);
+        // console.log(dataArr);
 
         
         switch (dataArr[0]) {
@@ -83,14 +84,34 @@ function doIt() {
                     function(response) {
                         //console.log(response);
                         var info = response.data;
-                        console.log("Title: " + info.Title);
-                        console.log("Release Year: " + info.Year);
-                        console.log("IMDB Rating: " + info.imdbRating);
-                        console.log("Rotten Tomatoes Score: " + info.Ratings[1].Value);
-                        console.log("Country of Production: " + info.Country);
-                        console.log("Languages: " + info.Language);
-                        console.log("Plot: " + info.Plot);
-                        console.log("Actors: " + info.Actors);
+
+                        title = "Title: " + info.Title;
+                        console.log(title);
+
+                        release = "Release Year: " + info.Year;
+                        console.log(release);
+
+                        imdb = "IMDB Rating: " + info.imdbRating;
+                        console.log(imdb);
+
+                        rotten = "Rotten Tomatoes Score: " + info.Ratings[1].Value;
+                        console.log(rotten);
+
+                        country = "Country of Production: " + info.Country;
+                        console.log(country);
+
+                        language = "Languages: " + info.Language;
+                        console.log(language);
+
+                        plot = "Plot: " + info.Plot
+                        console.log(plot);
+
+                        actors = "Actors: " + info.Actors
+                        console.log(actors);
+
+                        textToLog = title + "\n" + release + "\n" + imdb + "\n" + rotten + "\n" + country + "\n" + language + "\n" + plot + "\n" + actors;
+
+                        logText();
                     }).catch(function(error) {
                     if (error.response) {
                     // The request was made and the server responded with a status code
@@ -133,11 +154,21 @@ function doIt() {
                     // JSON response
                     // console.log(JSON.stringify(response, null, 2));
 
-                    console.log("Artist(s): " + response.tracks.items[0].album.artists[0].name);
-                    console.log("Song Name: " + response.tracks.items[0].name);
-                    console.log("Link to Song: " + response.tracks.items[0].external_urls.spotify);
-                    console.log("Album: " + response.tracks.items[0].album.name);
+                    artists = "Artist(s): " + response.tracks.items[0].album.artists[0].name;
+                    console.log(artists);
 
+                    name = "Song Name: " + response.tracks.items[0].name;
+                    console.log(name);
+
+                    link = "Link to Song: " + response.tracks.items[0].external_urls.spotify;
+                    console.log(link);
+
+                    album = "Album: " + response.tracks.items[0].album.name;
+                    console.log(album);
+
+                    textToLog = artists + "\n" + name + "\n" + link + "\n" + album;
+
+                    logText();
                 })
                 .catch(function(err) {
                     console.log(err);
@@ -156,20 +187,20 @@ function doIt() {
 
                 var artistString = dataArr[1];
 
-                console.log(artistString);
+                // console.log(artistString);
 
                 var fixedString = artistString.replace(/"/g, '');
 
-                console.log(fixedString);
+                // console.log(fixedString);
 
                 var artistArr = fixedString.split(" ");
 
-                console.log(artistArr);
+                // console.log(artistArr);
 
                 for ( var i = 0; i < artistArr.length ; i++) {
                     artist += "%20" + artistArr[i];
                 }
-                console.log(artist);
+                // console.log(artist);
 
                 var queryUrl = "https://rest.bandsintown.com/artists/" + artist + "/events?app_id=codingbootcamp";
             
@@ -184,13 +215,22 @@ function doIt() {
 
                     for (var i = 0 ; i < data.length ; i++){
                         console.log("----------Venue----------");
-                        console.log(data[i].venue.name);
-                        console.log("----------Location----------");
-                        console.log(data[i].venue.city + ", " + data[i].venue.region + ", " + data[i].venue.country);
-                        console.log("----------Date----------");
-                        console.log(moment(data[i].datetime).format('MMMM Do YYYY, h:mm:ss a'));
+                        venue = data[i].venue.name;
+                        console.log(venue);
 
-                        console.log("\n\n")
+                        console.log("----------Location----------");
+                        location = data[i].venue.city + ", " + data[i].venue.region + ", " + data[i].venue.country;
+                        console.log(location);
+
+                        console.log("----------Date----------");
+                        date = moment(data[i].datetime).format('MMMM Do YYYY, h:mm:ss a');
+                        console.log(date);
+
+                        console.log("\n");
+
+                        textToLog = "----------Venue----------\n" + venue + "\n----------Location----------\n" + location + "\n----------Date----------\n" + date;
+
+                        logText();
                     }
                     
                     }).catch(function(error) {
@@ -225,7 +265,6 @@ function doIt() {
 // concert-this function
 function concert() {
 
-    // Include the axios npm package
     var axios = require("axios");
 
     var bandsintown = require('bandsintown')("codingbootcamp");
@@ -236,7 +275,7 @@ function concert() {
         artist += "%20" + process.argv[i];
     }
 
-    console.log(artist);
+    // console.log(artist);
 
     var queryUrl = "https://rest.bandsintown.com/artists/" + artist + "/events?app_id=codingbootcamp";
  
@@ -251,13 +290,22 @@ function concert() {
 
             for (var i = 0 ; i < data.length ; i++){
                 console.log("----------Venue----------");
-                console.log(data[i].venue.name);
-                console.log("----------Location----------");
-                console.log(data[i].venue.city + ", " + data[i].venue.region + ", " + data[i].venue.country);
-                console.log("----------Date----------");
-                console.log(moment(data[i].datetime).format('MMMM Do YYYY, h:mm:ss a'));
+                venue = data[i].venue.name;
+                console.log(venue);
 
-                console.log("\n\n")
+                console.log("----------Location----------");
+                location = data[i].venue.city + ", " + data[i].venue.region + ", " + data[i].venue.country;
+                console.log(location);
+
+                console.log("----------Date----------");
+                date = moment(data[i].datetime).format('MMMM Do YYYY, h:mm:ss a');
+                console.log(date);
+
+                console.log("\n");
+
+                textToLog = "----------Venue----------\n" + venue + "\n----------Location----------\n" + location + "\n----------Date----------\n" + date;
+
+                logText();
             }
             
         }).catch(function(error) {
@@ -304,10 +352,21 @@ function spotify() {
         // JSON response
         // console.log(JSON.stringify(response, null, 2));
 
-        console.log("Artist(s): " + response.tracks.items[0].album.artists[0].name);
-        console.log("Song Name: " + response.tracks.items[0].name);
-        console.log("Link to Song: " + response.tracks.items[0].external_urls.spotify);
-        console.log("Album: " + response.tracks.items[0].album.name);
+        artists = "Artist(s): " + response.tracks.items[0].album.artists[0].name;
+        console.log(artists);
+
+        name = "Song Name: " + response.tracks.items[0].name;
+        console.log(name);
+
+        link = "Link to Song: " + response.tracks.items[0].external_urls.spotify;
+        console.log(link);
+
+        album = "Album: " + response.tracks.items[0].album.name;
+        console.log(album);
+
+        textToLog = artists + "\n" + name + "\n" + link + "\n" + album;
+
+        logText();
 
     })
     .catch(function(err) {
@@ -318,42 +377,53 @@ function spotify() {
 
 
 
-
 // function for movie-this
 function omdb() {
 
-    // Include the axios npm package
     var axios = require("axios");
 
-    // Grab or assemble the movie name and store it in a variable called "movieName"
     var movieName = "";
-    // ...
-    // movieName = process.argv[2];
 
     for ( var i = 3; i < process.argv.length ; i++) {
         movieName += process.argv[i] + "+";
     }
 
-    // Then run a request with axios to the OMDB API with the movie specified
     var queryUrl = "http://www.omdbapi.com/?t=" + movieName + "&y=&plot=short&apikey=trilogy";
 
-    // This line is just to help us debug against the actual URL.
     // console.log(queryUrl);
 
-    // Then create a request with axios to the queryUrl
-    // ...
     axios.get(queryUrl).then(
         function(response) {
             //console.log(response);
             var info = response.data;
-            console.log("Title: " + info.Title);
-            console.log("Release Year: " + info.Year);
-            console.log("IMDB Rating: " + info.imdbRating);
-            console.log("Rotten Tomatoes Score: " + info.Ratings[1].Value);
-            console.log("Country of Production: " + info.Country);
-            console.log("Languages: " + info.Language);
-            console.log("Plot: " + info.Plot);
-            console.log("Actors: " + info.Actors);
+
+            title = "Title: " + info.Title;
+            console.log(title);
+
+            release = "Release Year: " + info.Year;
+            console.log(release);
+
+            imdb = "IMDB Rating: " + info.imdbRating;
+            console.log(imdb);
+
+            rotten = "Rotten Tomatoes Score: " + info.Ratings[1].Value;
+            console.log(rotten);
+
+            country = "Country of Production: " + info.Country;
+            console.log(country);
+
+            language = "Languages: " + info.Language;
+            console.log(language);
+
+            plot = "Plot: " + info.Plot
+            console.log(plot);
+
+            actors = "Actors: " + info.Actors
+            console.log(actors);
+
+            textToLog = title + "\n" + release + "\n" + imdb + "\n" + rotten + "\n" + country + "\n" + language + "\n" + plot + "\n" + actors;
+
+            logText();
         }).catch(function(error) {
         if (error.response) {
         // The request was made and the server responded with a status code
@@ -375,4 +445,24 @@ function omdb() {
         console.log(error.config);
     });
 
+}
+
+
+
+function logText() {
+
+    var fs = require("fs");
+
+    var text = "New request on " + moment().format('MMMM Do YYYY, h:mm:ss a') + "\n" + textToLog + "\n\n";
+
+    fs.appendFile("log.txt", text, function(err) {
+
+        if (err) {
+            console.log(err);
+        }
+
+        else {
+            console.log("Content Added!");
+        }
+    })
 }
