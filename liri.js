@@ -339,14 +339,23 @@ function spotify() {
  
     var spotify = new Spotify(keys.spotify);
 
+
     var songName = "";
 
-    for (i = 3; i < process.argv.length; i++) {
-        if (i > 3 && i < process.argv.length) {
-            songName = songName + "+" + process.argv[i];
-          } else {
-            songName += process.argv[i];
-          }
+    if (process.argv.length === 3) {
+        songName = "The Sign";
+    }
+
+    else {
+
+        for (i = 3; i < process.argv.length; i++) {
+            if (i > 3 && i < process.argv.length) {
+                songName = songName + "+" + process.argv[i];
+            } else {
+                songName += process.argv[i];
+            }
+        }
+
     }
 
     //console.log(songName);
