@@ -267,7 +267,7 @@ function concert() {
 
     var axios = require("axios");
 
-    var bandsintown = require('bandsintown')("codingbootcamp");
+    //var bandsintown = require('bandsintown')("codingbootcamp");
 
     var artist = "";
 
@@ -341,9 +341,15 @@ function spotify() {
 
     var songName = "";
 
-    for ( var i = 3; i < process.argv.length ; i++) {
-        songName += process.argv[i] + " ";
+    for (i = 3; i < process.argv.length; i++) {
+        if (i > 3 && i < process.argv.length) {
+            songName = songName + "+" + process.argv[i];
+          } else {
+            songName += process.argv[i];
+          }
     }
+
+    //console.log(songName);
     
     spotify
     .search({ type: 'track', query: songName })
@@ -415,10 +421,10 @@ function omdb() {
             language = "Languages: " + info.Language;
             console.log(language);
 
-            plot = "Plot: " + info.Plot
+            plot = "Plot: " + info.Plot;
             console.log(plot);
 
-            actors = "Actors: " + info.Actors
+            actors = "Actors: " + info.Actors;
             console.log(actors);
 
             textToLog = title + "\n" + release + "\n" + imdb + "\n" + rotten + "\n" + country + "\n" + language + "\n" + plot + "\n" + actors;
@@ -462,7 +468,7 @@ function logText() {
         }
 
         else {
-            console.log("Content Added!");
+            console.log("Content added to log.txt!");
         }
     })
 }
